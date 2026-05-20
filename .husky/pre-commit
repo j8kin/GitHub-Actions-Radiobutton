@@ -1,1 +1,6 @@
 npx lint-staged
+
+if git diff --cached --name-only | grep -q "^src/"; then
+  yarn bundle
+  git add dist/index.js dist/licenses.txt
+fi

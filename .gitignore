@@ -1,6 +1,7 @@
 .air
 .idea
 node_modules/
-dist/
+dist/*.d.ts
+dist/*.d.ts.map
 lib/
 coverage/
