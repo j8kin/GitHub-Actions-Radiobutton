@@ -1,0 +1,35 @@
+name: CI
+
+on:
+    push:
+        branches: [main]
+    pull_request:
+        branches: [main]
+
+jobs:
+    test:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: '20'
+                  cache: 'yarn'
+            - run: yarn install --frozen-lockfile
+            - run: yarn test
+            - run: yarn lint
+
+    bundle-check:
+        runs-on: ubuntu-latest
+        needs: test
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: '20'
+                  cache: 'yarn'
+            - run: yarn install --frozen-lockfile
+            - run: yarn bundle
+            - name: Check dist is up to date
+              run: |
+                  git diff --exit-code dist/index.js || (echo "dist/index.js is out of date, run yarn bundle and commit" && exit 1)

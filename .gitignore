@@ -1,0 +1,6 @@
+.air
+.idea
+node_modules/
+dist/
+lib/
+coverage/

@@ -1,0 +1,32 @@
+name: 'PR Radiobutton Checkboxes'
+description: 'Enforce mutual exclusivity among checkboxes in designated radio-button groups in PR descriptions'
+author: 'j8kin'
+
+branding:
+    icon: 'check-square'
+    color: 'blue'
+
+inputs:
+    branch-patterns:
+        description: |
+            Newline-separated list of branch patterns to filter which PRs the action applies to.
+            Format: "head-pattern -> base-pattern" (e.g. "feature/** -> main").
+            If omitted, the action applies to all PRs.
+        required: false
+        default: ''
+
+    github-token:
+        description: 'GitHub token used to update PR body. Defaults to the built-in GITHUB_TOKEN.'
+        required: false
+        default: '${{ github.token }}'
+
+outputs:
+    updated:
+        description: '"true" if the PR body was modified, "false" otherwise'
+
+    group-count:
+        description: 'Number of radio groups found in the PR body'
+
+runs:
+    using: 'node20'
+    main: 'dist/index.js'
