@@ -1,6 +1,8 @@
 # PR Radiobutton Checkboxes
 
-A GitHub Action that enforces mutual exclusivity among checkboxes in designated radio-button groups in PR descriptions. When a contributor checks one option in a group, all other options in that group are automatically unchecked — just like HTML radio buttons.
+A GitHub Action that enforces mutual exclusivity among checkboxes in designated radio-button groups in PR descriptions.
+When a contributor checks one option in a group, all other options in that group are automatically unchecked — just like
+HTML radio buttons.
 
 ## Usage
 
@@ -26,7 +28,8 @@ jobs:
 
 ## Radio Group Syntax
 
-Mark sections of your PR description template with HTML comment markers to define a radio group. Only one checkbox within a group can be checked at a time.
+Mark sections of your PR description template with HTML comment markers to define a radio group. Only one checkbox
+within a group can be checked at a time.
 
 ```markdown
 ## Change Type
@@ -51,7 +54,8 @@ Mark sections of your PR description template with HTML comment markers to defin
 
 The `:name` suffix on the opening tag is optional but recommended — it makes groups identifiable in the action output.
 
-When a PR author checks "Bug fix", the action automatically unchecks all other items in that group and updates the PR body.
+When a PR author checks "Bug fix", the action automatically unchecks all other items in that group and updates the PR
+body.
 
 ## Inputs
 
@@ -69,7 +73,8 @@ When a PR author checks "Bug fix", the action automatically unchecks all other i
 
 ## Branch Patterns
 
-Use `branch-patterns` to restrict the action to specific PR flows. Each line has the format `head-pattern -> base-pattern`, using glob syntax.
+Use `branch-patterns` to restrict the action to specific PR flows. Each line has the format
+`head-pattern -> base-pattern`, using glob syntax.
 
 ```yaml
 - uses: j8kin/GitHub-Actions-Radiobutton@v1.0.0
@@ -87,6 +92,21 @@ Use `branch-patterns` to restrict the action to specific PR flows. Each line has
 | `hotfix/** -> main`  | Only PRs from `hotfix/*` branches targeting `main`  |
 | `** -> develop`      | All PRs targeting the `develop` branch              |
 | _(empty)_            | All PRs, regardless of branch names                 |
+
+## Latency & Behavior
+
+This action runs on the GitHub Actions `pull_request` event, so expect a **~8–10 second delay** between editing the PR
+description and seeing the checkboxes update. The delay comes from GitHub Actions itself, not the action's logic:
+
+- ~1–3s — webhook delivery and workflow queueing
+- ~3–6s — GitHub-hosted runner cold start
+- ~1–2s — action execution and PR body update
+
+**The PR page does not auto-refresh** — after editing the description, reload the page to see the action's update. If
+you don't refresh, the checkboxes will appear unchanged even after the workflow has completed.
+
+If you need lower latency, a self-hosted runner eliminates the cold-start cost (~3–6s). Sub-second response is only
+achievable by replacing the action with a GitHub App backed by a persistent webhook listener.
 
 ## License
 
