@@ -1,0 +1,22 @@
+name: Test Marketplace Action
+
+on:
+    pull_request:
+        types: [opened, edited, synchronize, reopened]
+
+jobs:
+    radiobutton:
+        if: github.head_ref == 'test/radiobutton-demo'
+        runs-on: ubuntu-latest
+        permissions:
+            pull-requests: write
+        steps:
+            - uses: j8kin/GitHub-Actions-Radiobutton@v1.0.0
+              with:
+                  github-token: ${{ secrets.GITHUB_TOKEN }}
+              id: radiobutton
+
+            - name: Print outputs
+              run: |
+                  echo "updated=${{ steps.radiobutton.outputs.updated }}"
+                  echo "group-count=${{ steps.radiobutton.outputs.group-count }}"
